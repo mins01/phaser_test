@@ -45,6 +45,8 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@v3.80.1/dist/phaser.min.js"></script>
     <script src="TestClock.js"></script>
+    <script src="TestAnalogClock.js"></script>
+    
 </head>
 <body>
     <div class="container" >
@@ -54,9 +56,13 @@
         </div>
         <hr>
         <div class="text-center">
-            
-            <button type="button" class="btn btn-info" onclick="game.scene.getScenes()[0].startClock()">시계 시작</button>
-            <button type="button" class="btn btn-info" onclick="game.scene.getScenes()[0].stopCLock()">시계 중기</button>
+            <button type="button" class="btn btn-info" onclick="game.pause()">시계 pause</button>
+            <button type="button" class="btn btn-info" onclick="game.resume()">시계 resume</button>
+            <button type="button" class="btn btn-info" onclick="game.start()">시계 start</button>
+        </div>
+        <hr>
+        <div class="text-center">
+            <button type="button" class="btn btn-success" onclick="game.scene.isActive('TestClock')?game.scene.switch(game.scene.getScene('TestClock'),game.scene.getScene('TestAnalogClock')):game.scene.switch(game.scene.getScene('TestAnalogClock'),game.scene.getScene('TestClock'))">시계변경</button>
         </div>
     </div>
     
@@ -66,18 +72,21 @@
             type:Phaser.WEBGL,
             backgroundColor:'#abc',
             width:600,
-            height:300,
-            scene:TestClock,
-            physics:{
-                default:'arcade',
-                arcade:{
-                    gravity:{y:200}
-                }
-            },
+            height:600,
+            // scene:{TestClock,TestAnalogClock},
+            scene:[TestClock,TestAnalogClock],
+            // physics:{
+            //     default:'arcade',
+            //     arcade:{
+            //         gravity:{y:200}
+            //     }
+            // },
             canvas:document.querySelector('#canvas-game')
 
         }
         const game = new Phaser.Game(config);
+
+
     </script>
 
 
