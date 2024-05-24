@@ -33,6 +33,9 @@ class TestMatter extends Phaser.Scene
     create(){
         this.matter.world.setBounds(); // game 화면 밖으로 벗어나지 못한다.
 
+        // this.matter.world.drawDebug = false;
+        this.matter.world.drawDebug = true;
+
         this.fpsbox = this.add.text(10,10,'FPS',{fontSize:'30px',fill:'#000',padding:{left:10,right:20,top:10,bottom:10}})
         this.textbox = this.add.text(10,40,'READY',{fontSize:'30px',fill:'#000',padding:{left:10,right:20,top:10,bottom:10}})
 
