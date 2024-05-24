@@ -31,13 +31,18 @@ class TestMatter extends Phaser.Scene
     addingCircle = false;
     lastpointer = null;
     create(){
-        this.matter.world.setBounds()
+        this.matter.world.setBounds(); // game 화면 밖으로 벗어나지 못한다.
+
         this.fpsbox = this.add.text(10,10,'FPS',{fontSize:'30px',fill:'#000',padding:{left:10,right:20,top:10,bottom:10}})
         this.textbox = this.add.text(10,40,'READY',{fontSize:'30px',fill:'#000',padding:{left:10,right:20,top:10,bottom:10}})
 
         this.rect = this.matter.add.image(100,100,'rect');
         // this.rect.setCollideWorldBounds(true).setVelocity(-100,-300).setBounce(1,1).setDepth(10);
         this.rect.setVelocity((Math.random()*20-10),(Math.random()*20-10)).setBounce(0.8).setFriction(0.2).setDepth(10);
+
+        // this.rect.setCollisionGroup(2)
+        // this.rect.setCollisionCategory(1)
+        // this.rect.setCollisionCategory(4)
 
         this.addCircle()
 
@@ -68,7 +73,11 @@ class TestMatter extends Phaser.Scene
         // return;
         let circle = this.matter.add.image(x,y,'circle').setCircle(10).setVelocity((Math.random()*20-10),(Math.random()*20-10)).setBounce(1).setFriction(0.1);
         
-
+        // circle.setFixedRotation(); // 총돌시 회전 금지
+        // circle.setCollisionGroup(1)
+        // circle.setCollidesWith(2)
+        // circle.setCollidesWith([1,2,4])
+        
 
         this.add.tween({
             targets: [circle],

@@ -65,6 +65,7 @@ class TestGraphic extends Phaser.Scene
     addCircle(x=100,y=100){
         
         let circle = this.physics.add.image(x,y,'circle').setCircle(10).setCollideWorldBounds(true).setVelocity((Math.random()*200-100),(Math.random()*200-100)).setBounce(Math.random()*0.5+0.5,Math.random()*0.5+0.5);
+        this.physics.add.collider(this.rect, circle); //rect 와 circle 는 물리엔진에서 충돌처리
 
 
         this.add.tween({
