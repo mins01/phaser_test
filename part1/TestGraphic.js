@@ -9,6 +9,7 @@ class TestGraphic extends Phaser.Scene
     preload(){
         {
             var graphics = this.make.graphics().fillStyle(0xffff00).fillRect(0, 0, 20, 20);
+            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(10,10).lineTo(10,20).stroke().closePath()
             graphics.generateTexture("rect", 20, 20);
             graphics.destroy();
         }
@@ -16,6 +17,7 @@ class TestGraphic extends Phaser.Scene
         {
             var circleShape = new Phaser.Geom.Circle(10,10,10);
             var graphics = this.make.graphics().fillStyle(0x0000ff).setAlpha(0.5).fillCircleShape(circleShape);
+            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(10,10).lineTo(10,20).stroke().closePath()
             graphics.generateTexture("circle", 20, 20);
             graphics.destroy();
         }
@@ -62,7 +64,7 @@ class TestGraphic extends Phaser.Scene
 
     addCircle(x=100,y=100){
         
-        let circle = this.physics.add.image(x,y,'circle').setCollideWorldBounds(true).setVelocity((Math.random()*200-100),(Math.random()*200-100)).setBounce(Math.random()*0.5+0.5,Math.random()*0.5+0.5);
+        let circle = this.physics.add.image(x,y,'circle').setCircle(10).setCollideWorldBounds(true).setVelocity((Math.random()*200-100),(Math.random()*200-100)).setBounce(Math.random()*0.5+0.5,Math.random()*0.5+0.5);
 
 
         this.add.tween({
