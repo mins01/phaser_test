@@ -11,6 +11,7 @@ class TestGameBlock extends Phaser.Scene
         this.blockPoints = [];
         this.blockPolygons = {};
         this.blockTextrue = {};
+        this.blocks = [];
     }
 
     
@@ -61,7 +62,8 @@ class TestGameBlock extends Phaser.Scene
             n = n%this.blockPoints.length;
             let key = this.blockPoints[n].key;
             this.lastpointer = pointer;
-            this.addBlock(pointer.position.x,pointer.position.y, key);
+            let block = this.addBlock(pointer.position.x,pointer.position.y, key);
+            this.blocks.push(block);
             // console.log(key);
             n++;
         })
@@ -80,12 +82,13 @@ class TestGameBlock extends Phaser.Scene
         console.log('addBlock',key)
         // let key = 'block_'+n;
         let block = this.matter.add.image(x,y,key)
-            .setBounce(0.1)
+            .setBounce(0)
             .setFriction(0.5);
         let body = this.matter.add.fromVertices(x,y,this.blockPolygons[key].points)
         block.setExistingBody(body);
         block.setScale(0.5)
 
+        console.log(block.body);
         return block
     }
    
@@ -94,7 +97,24 @@ class TestGameBlock extends Phaser.Scene
     update(time, delta){
        
         this.fpsbox.text = 'FPS:'+this.game.loop.actualFps
+        // this.getMaxHeight();
+        this.textbox.text = 'HEIGHT: '+ (this.game.canvas.height - this.getBlockYAll()).toFixed(2);
+    }
+    getBlockY(block){
+        let min = block.body.vertices[0].y
+        block.body.vertices.forEach(el => {
+            min = Math.min(min,el.y)
+        });
+        return min;
+    }
+    getBlockYAll(){
+        let min = this.game.canvas.height
 
+        this.blocks.forEach((block,idx)=>{
+            if(block.body.speed > 0.1) return;
+            min = Math.min(min,this.getBlockY(block));
+        })
+        return min;
     }
 
     // time0 = 0;
