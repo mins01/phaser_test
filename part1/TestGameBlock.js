@@ -1,41 +1,45 @@
 class TestGameBlock extends Phaser.Scene
 {
     
+    polygons = null;
+    bodies = null
+
     constructor() {
         super("TestGameBlock");
         // super({ key: "TestGameBlock" });
+
+        this.blockPoints = [];
+        this.blockPolygons = {};
+        this.blockTextrue = {};
     }
 
+    
     preload(){
-        {
-            // ㅁ
-            let graphics = this.make.graphics().fillStyle(0xffff00).fillRect(0, 0, 50, 50);
-            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(25,25).lineTo(25,50).stroke().closePath()
-            graphics.generateTexture("block_0", 50, 50);
+        
+        this.blockPoints = [
+            // {key:'block_0',points:[0,0], size:[0,0] }, // 0
+            {key:'block_1',points:[0,0, 50,0, 50,50, 0,50], size:[50,50] }, // ㅁ
+            {key:'block_2',points:[0,0, 100,0, 100,50, 0,50], size:[100,50] }, // ㅁㅁ
+            {key:'block_3',points:[0,0, 150,0, 150,50, 0,50], size:[150,50] }, // ㅁㅁㅁ
+            {key:'block_4',points:[0, 0, 100, 0, 100, 50, 50, 50, 50, 100, 0, 100], size:[100,100] }, // ㅁㅁ
+                                                                                      // ㅁ
+        ]
+        this.blockPoints.forEach((blockPoint,idx)=>{
+            if(blockPoint.size[0]===0 || blockPoint.size[1]===0){ return; }
+            // console.log(blockPoint);
+            this.blockPolygons[blockPoint.key] = new Phaser.Geom.Polygon( blockPoint.points );
+            let potins = this.blockPolygons[blockPoint.key].points
+            console.log(blockPoint.key,this.blockPolygons[blockPoint.key]);
+            let graphics = this.make.graphics()
+            // .fillStyle(0x0000ff22).setAlpha(0.2).fillRect(0, 0, blockPoint.size[0], blockPoint.size[1])
+            .setAlpha(1).fillStyle(0xffff00).fillPoints(potins,true,true);
+            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(blockPoint.size[0]/2,blockPoint.size[1]/2).lineTo(blockPoint.size[0]/2,blockPoint.size[0]).stroke().closePath();
+            console.log('xxx',blockPoint.points);
+            this.blockTextrue[blockPoint.key] =  graphics.generateTexture(blockPoint.key, blockPoint.size[0], blockPoint.size[1]);
             graphics.destroy();
-        }
-        {
-            // ㅁㅁ
-            let graphics = this.make.graphics().fillStyle(0xffff00).fillRect(0, 0, 100, 50);
-            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(50,25).lineTo(50,50).stroke().closePath()
-            graphics.generateTexture("block_1", 100, 50);
-            graphics.destroy();
-        }
-        {
-            // ㅁㅁㅁ
-            let graphics = this.make.graphics().fillStyle(0xffff00).fillRect(0, 0, 150, 50);
-            graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(90,25).lineTo(90,50).stroke().closePath()
-            graphics.generateTexture("block_2", 150, 50);
-            graphics.destroy();
-        }
-        {
-            // ㅁㅁ
-            // ㅁ
-            let graphics = this.make.graphics().fillStyle(0xffff00).fillRect(0, 0, 100, 50).fillRect(0, 50, 50, 50);
-            // graphics.lineStyle(4,0xFF0000,1).beginPath().moveTo(50,25).lineTo(50,50).stroke().closePath()
-            graphics.generateTexture("block_3", 100, 100);
-            graphics.destroy();
-        }
+            console.log('created texture',blockPoint.key);
+        });
+
     }
     create(){
         this.matter.world.setBounds(); // game 화면 밖으로 벗어나지 못한다.
@@ -48,17 +52,15 @@ class TestGameBlock extends Phaser.Scene
 
         let n = 0;
         this.input.on('pointerdown',(pointer)=>{
+            
+            n = n%this.blockPoints.length;
+            let key = this.blockPoints[n].key;
             this.lastpointer = pointer;
-            this.addBlock(pointer.position.x,pointer.position.y, n);
+            this.addBlock(pointer.position.x,pointer.position.y, key);
+            console.log(key);
             n++;
-            n = n%4;
         })
         this.input.on('pointerup',(pointer)=>{
-            // console.log(pointer);
-
-            // console.log(pointer.upX,pointer.upY);
-            // this.addCircle(pointer.downX,pointer.downY)
-            this.addingCircle= false;
             this.lastpointer = null;
         })
         this.input.on('pointermove',(pointer)=>{
@@ -69,37 +71,16 @@ class TestGameBlock extends Phaser.Scene
         })
     }
 
-    addBlock(x,y,n){
-        console.log(n)
-        let block = null;
-        // block = this.matter.add.image(x,y,'block_'+n)
-        //     .setBounce(0.1)
-        //     .setFriction(0.1)
-        //     .setBody({type:'fromPhysicsEditor'});
-        
-
-        if(n==3){
-            block = this.matter.add.image(x,y,'block_'+n)
-            .setBody({
-                type:'fromVertices',
-                width:100,height:100,
-                flagInternal:true,
-                removeCollinear:1,
-                minimumArea:0,
-                verts:[{x:0, y:0}, {x:100, y:0}, {x:100, y:50}, {x:50, y:50}, {x:50, y:100}, {x:0, y:100}]
-            })
-            // .setBounce(0)
-            // .setFriction(0.1);
-
-            // block = this.matter.add.fromVertices(x,y,[{x:0, y:0}, {x:100, y:0}, {x:100, y:50}, {x:50, y:50}, {x:50, y:100}, {x:0, y:100}],{},false,1,0);
-            // block.setBounce(0).setFriction(0.1);
-        }else{
-            block = this.matter.add.image(x,y,'block_'+n)
+    addBlock(x,y,key){
+        console.log(key)
+        // let key = 'block_'+n;
+        let block = this.matter.add.image(x,y,key)
             .setBounce(0.1)
-            .setFriction(0.1)
-            // .setBody({type:'fromPhysicsEditor'});   
-        }
-        
+            .setFriction(0.1);
+            console.log(this.blockPolygons);
+        let body = this.matter.add.fromVertices(x,y,this.blockPolygons[key].points)
+        block.setExistingBody(body);
+
         return block
     }
    
