@@ -33,9 +33,14 @@ class TestMatterConstraint extends Phaser.Scene
         let stiffness = 0.001
         this.matter.add.constraint(circle, circle2, distance, stiffness);
 
-        this.input.on('pointerup',(pointer)=>{
-            circle2.setVelocityY(-30).setVelocityX(Math.random()*60-30);
-        })
+        const canDrag = this.matter.world.nextGroup();
+        this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, collisionFilter: { group: canDrag } })
+
+        circle2.setCollisionGroup(canDrag)
+
+        // this.input.on('pointerup',(pointer)=>{
+        //     circle2.setVelocityY(-30).setVelocityX(Math.random()*60-30);
+        // })
     }
 
     
