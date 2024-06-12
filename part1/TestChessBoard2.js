@@ -168,13 +168,13 @@ class TestChessBoard2 extends Phaser.Scene
         this.initPieces.forEach(p=>{
             // let ix = p.boardIdx % 8;
             // let iy = Math.floor(p.boardIdx / 8);
-            let square = squares[p.boardIdx]
-            let squarePos = square.getCenter([],false);            
+            // let square = squares[p.boardIdx]
+            // let squarePos = square.getCenter([],false);            
             // let piece =  this.add.image(squarePos.x,squarePos.y,p.texture).setOrigin(0.5).setDepth(2); 
             let piece =  this.add.image(Math.random()*boardW,Math.random()*boardH,p.texture).setOrigin(0.5).setDepth(2); 
-            console.log(Math.random()*this.boardW);
-            piece.square = square;
-            
+            piece.pieceName = p.texture
+            // piece.square = square;
+            piece.square = null;
             piece.setInteractive()
             
 
@@ -326,7 +326,7 @@ class TestChessBoard2 extends Phaser.Scene
                     getEnd: () => squarePos.y
                 },
                 onComplete: () => {
-                    console.log('재설정',piece);
+                    console.log('재설정',piece.pieceName);
                 }
             });
         });
