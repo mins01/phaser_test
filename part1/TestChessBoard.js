@@ -158,7 +158,7 @@ class TestChessBoard extends Phaser.Scene
         48	49	50	51	52	53	54	55
         56	57	58	59	60	61	62	63
         */
-       this.matter.world.setBounds()
+        this.matter.world.setBounds()
         const canDrag = this.matter.world.nextGroup();
         this.matter.add.mouseSpring({ length: 0, stiffness: 0, collisionFilter: { group: canDrag } })
 
@@ -168,9 +168,9 @@ class TestChessBoard extends Phaser.Scene
             let posB = rects[p.boardIdx].getCenter();            
             let piece =  this.matter.add.image(posB.y,posB.x,p.texture).setOrigin(0.5).setDepth(2); 
             piece.setBody({type:'rectangle',width:30,height:30});
-            piece.setFixedRotation()
-            piece.setCollisionGroup(canDrag)
-            // piece.setSensor(true)
+            piece.setFixedRotation() //회전금지
+            piece.setCollisionGroup(canDrag) //충돌그룹 설정
+            // piece.setSensor(true) //센서 동작 관련
             // piece.setVelocity(0, 0)
             // piece.setAngularVelocity(0)
 
