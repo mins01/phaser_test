@@ -160,13 +160,14 @@ class TestChessBoard extends Phaser.Scene
         */
        this.matter.world.setBounds()
         const canDrag = this.matter.world.nextGroup();
-        this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, collisionFilter: { group: canDrag } })
+        this.matter.add.mouseSpring({ length: 0, stiffness: 0, collisionFilter: { group: canDrag } })
 
         this.initPieces.forEach(p=>{
             // let ix = p.boardIdx % 8;
             // let iy = Math.floor(p.boardIdx / 8);
             let posB = rects[p.boardIdx].getCenter();            
             let piece =  this.matter.add.image(posB.y,posB.x,p.texture).setOrigin(0.5).setDepth(2); 
+            piece.setBody({type:'rectangle',width:30,height:30});
             piece.setFixedRotation()
             piece.setCollisionGroup(canDrag)
             // piece.setSensor(true)
